@@ -1,25 +1,40 @@
 (deffacts fapte
-    (lista 7 8 9 2 8 7 8 3)
+    (list 1 2 3 2 1)
+    (reversed)
+    (copy1)
+    (copy2)
+)
+
+(defrule createCopies 
+?a<-(list $?before ?u)
+?b<-(copy1 $? $?after)
+?c<-(copy2 $? $?after)
+=> 
+(retract ?a)
+(retract ?b)
+(retract ?c)
+(assert(list $?before))
+(assert(copy1 ?u $?after))
+(assert(copy2 ?u $?after))
 )
 
 
-(defrule elemUniceImpare
-  ?a<-(lista $?before ?x $?middle ?y $?middle2 ?z $?after &:(= ?x ?y ?z))
-  =>
-  (retract ?a)
-  (assert (lista $?before $?middle $?middle2 $?after))
-)
 
+(defrule reverseList 
+?a<-(copy1 $?before ?u)
+?b<-(reversed $? $?after)
+=> 
+(retract ?a)
+(retract ?b)
+(assert(copy1 $?before))
+(assert(reversed $?after ?u)) 
+) 
 
-(defrule elemUnicePare
-  ?a<-(lista $?before ?x $?middle ?y $?after &:(= ?x ?y))
-  =>
-  (retract ?a)
-  (assert (lista $?before $?middle $?after))
-)
-
-(defrule afiseazaUnice
- (lista $? ?x $?)
+(defrule checkPalindrome
+ ?a<-(copy2 $?val1)
+ ?b<-(reversed $?val2)
  =>
- (printout t ?x crlf)
+ (printout t $?val1)
+ (printout t $?val2 crlf)
 )
+
