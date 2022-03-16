@@ -1,5 +1,5 @@
 (deffacts fapte
-    (list 1 2 3 2 1)
+    (list 1 2 3 2 5)
     (reversed)
     (copy1)
     (copy2)
@@ -19,7 +19,6 @@
 )
 
 
-
 (defrule reverseList 
 ?a<-(copy1 $?before ?u)
 ?b<-(reversed $? $?after)
@@ -36,5 +35,6 @@
  =>
  (printout t $?val1)
  (printout t $?val2 crlf)
+ (printout t (eq $?val1 $?val2) crlf)
 )
 
