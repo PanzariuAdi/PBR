@@ -60,23 +60,27 @@
 (defrule citire 
   ?a<-(optiune 3)
   (not (elem ?))
+  (not(stop))
   =>
   (printout t "Introduceti elementul : " crlf)
   (assert (elem (read)))
 )
 
-
 (defrule addElem 
 ?b<-(elem $? ?z)
-?a<-(lista $?before ?x&:(!= ?x ?z))
+?a<-(lista $?values)
+?c<-(optiune 3)
 => 
+(assert (stop))
 (retract ?a)
-(assert(lista $?before ?x ?z))
+(retract ?b)
+(assert(lista $?values ?z))
 (printout t "Element adaugat !" crlf)
 )
 
 (defrule afiseazaElementAdaugat
- ?b<-(optiune 3)
+?c<-(optiune 3)
+(stop)
  (lista $? ?x $?)
  =>
  (printout t ?x crlf)
@@ -84,6 +88,7 @@
 
 (defrule iesire3
 ?b<-(optiune 3)
+(stop)
  =>
 (retract ?b)
 (assert (meniu))
@@ -93,32 +98,98 @@
 
 ;-------------------------------------------------------------------------------------------------
 
+(deffacts fapte
+    (rev)
+)
 
+(defrule createCopiesPalindrome 
+?a<-(lista $?val)
+?b<-(optiune 4)
+=> 
+(assert(copy01 $?val))
+(assert(copy02 $?val))
+)
+
+
+
+(defrule reverseList 
+?a<-(copy01 $?before ?u)
+?b<-(rev $? $?after)
+?c<-(optiune 4)
+=> 
+(retract ?a)
+(retract ?b)
+(assert(copy01 $?before))
+(assert(rev $?after ?u)) 
+) 
+
+(defrule checkPalindrome
+ ?a<-(copy02 ?val1 $?afterc)
+ ?b<-(rev ?val2 $?after)
+ ?c<-(optiune 4)
+ (test(= ?val1 ?val2))
+ =>
+ (retract ?a)
+ (retract ?b)
+ (assert (copy02 $?afterc))
+ (assert (rev $?after))
+)
+
+(defrule isPalindrome
+ ?a<-(optiune 4)
+ (copy02)
+ (rev)
+ =>
+ (assert (palindrome))
+ (printout t "Palindrome" crlf)
+)
+
+(defrule notPalindrome
+ ?a<-(optiune 4)
+ (not(palindrome))
+ =>
+ (printout t "Not Palindrome" crlf)
+)
+
+(defrule iesire4
+?b<-(optiune 4)
+ =>
+(retract ?b)
+(assert (meniu))
+)
 ;-------------------------------------------------------------------------------------------------
 
+(defrule createCopies 
+?a<-(lista $?values)
+?b<-(optiune 5)
+=> 
+(assert(list $?values))
+)
+
+
 (defrule sortare_lista1
-?b<-(lista $?before ?x ?y $?after &:(< ?y ?x))
+?b<-(list $?before ?x ?y $?after &:(< ?y ?x))
 ?a<-(optiune 5)
 =>
 (retract ?b)
-(assert (lista $?before ?y ?x $?after))
+(assert (list $?before ?y ?x $?after))
 )
 
 (defrule afisareMinim
  ?a<-(optiune 5)
- (lista ?x $?) 
+ (list ?x $?) 
  =>
  (printout t "Cel mai mic numar este : " ?x crlf)
 )
 
 (defrule afisareMaxim
  ?a<-(optiune 5)
- (lista $? ?x) 
+ (list $? ?x) 
  =>
  (printout t "Cel mai mare numar este : " ?x crlf)
 )
 
-(defrule iesire5
+(defrule iesire5 
 ?b<-(optiune 5)
  =>
 (retract ?b)
