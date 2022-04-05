@@ -31,7 +31,7 @@ len([_|Y], LenResult):-
 list(L):-
         findall(X-Y,edge(X,Y),L).
 
-eulerian(A,B,Path,List,Length1, Length2):-
+eulerian(A,B,Path):-
         path(A,B,Path),
         list(List),
 
@@ -41,5 +41,5 @@ eulerian(A,B,Path,List,Length1, Length2):-
         Length1==Length2.
 
 rule(A,B):-
-    (eulerian(A,B,Path,List, Length1, Length2), write("Este drum eulerian : "), write(Path));
-    (\+(eulerian(A,B,Path,List, Length1, Length2)), path(A,B,Path), write("Nu este drum eulerian : "), write(Path)).
+    (eulerian(A,B,Path), write("Este drum eulerian : "), write(Path));
+    (\+(eulerian(A,B,_)), path(A,B,Path), write("Nu este drum eulerian : "), write(Path)).
