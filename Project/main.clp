@@ -82,8 +82,14 @@
     )  
 )
 
-(defrule MAIN::print-solution
 
+(deffunction char-explode$ (?string)
+   (bind ?rv (create$))
+   (loop-for-count (?i (str-length ?string))
+      (bind ?rv (create$ ?rv (sub-string ?i ?i ?string))))
+   ?rv)
+
+(defrule MAIN::print-solution
 ; the default printing method
 
     (pb (state blocked) (level 0))
@@ -92,8 +98,28 @@
     (printout t crlf "Solution : " crlf)
     (bind ?length (length$ $?list))
     (bind ?i 1)
-    (while (< ?i ?length) (printout t (nth$ ?i $?list) " : " (nth$ (+ ?i 1)
-$?list) crlf) (bind ?i (+ ?i 2)))
+    (while (< ?i ?length) 
+        (bind ?var (nth$ ?i $?list))
+        (bind ?val (str-cat (nth$ (+ ?i 1) $?list)))
+
+        (bind ?arr (char-explode$ ?val))
+
+        (bind ?day_i (string-to-field (nth$ 1 $?arr)))
+        (bind ?hour_i (string-to-field  (nth$ 2 $?arr)))
+        (bind ?room_i (string-to-field  (nth$ 3 $?arr)))
+
+
+        (bind ?days (explode$ "Mon Tue Wed Thu Fri"))
+        (bind ?hours (explode$ "8:00 9:00 10:00 11:00 12:00 13:00"))
+        (bind ?rooms (explode$ "R1 R2 R3 R4 R5"))
+
+        (bind ?day (nth$ ?day_i $?days))
+        (bind ?hour (nth$ ?hour_i $?hours))
+        (bind ?room (nth$ ?room_i $?rooms))
+
+        (printout t ?var " : " ?day " " ?hour " " ?room crlf) 
+        (bind ?i (+ ?i 2))
+    )
 )
 
 
@@ -222,10 +248,10 @@ $?list) 0)))
 
 
 (deffacts PROPAG::events
- (var (name x1) (possible-values (create$ 123, 245, 141, 345)))
- (var (name x2) (possible-values (create$ 123, 245, 141, 345)))
- (var (name x3) (possible-values (create$ 123, 245, 141, 345)))
- (var (name x4) (possible-values (create$ 123, 245, 141, 345)))
+ (var (name E1) (possible-values (create$ 123, 245, 141, 345)))
+ (var (name E2) (possible-values (create$ 123, 245, 141, 345)))
+ (var (name E3) (possible-values (create$ 123, 245, 141, 345)))
+ (var (name E4) (possible-values (create$ 123, 245, 141, 345)))
 )
 
 ;########################## Constraints propagation ##################
