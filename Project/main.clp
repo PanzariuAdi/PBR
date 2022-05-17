@@ -98,6 +98,9 @@
     (printout t crlf "Solution : " crlf)
     (bind ?length (length$ $?list))
     (bind ?i 1)
+    (bind ?days (explode$ "Mon Tue Wed Thu Fri"))
+    (bind ?hours (explode$ "8:00 9:00 10:00 11:00 12:00 13:00"))
+    (bind ?rooms (explode$ "R1 R2 R3 R4 R5"))
     (while (< ?i ?length) 
         (bind ?var (nth$ ?i $?list))
         (bind ?val (str-cat (nth$ (+ ?i 1) $?list)))
@@ -107,11 +110,6 @@
         (bind ?day_i (string-to-field (nth$ 1 $?arr)))
         (bind ?hour_i (string-to-field  (nth$ 2 $?arr)))
         (bind ?room_i (string-to-field  (nth$ 3 $?arr)))
-
-
-        (bind ?days (explode$ "Mon Tue Wed Thu Fri"))
-        (bind ?hours (explode$ "8:00 9:00 10:00 11:00 12:00 13:00"))
-        (bind ?rooms (explode$ "R1 R2 R3 R4 R5"))
 
         (bind ?day (nth$ ?day_i $?days))
         (bind ?hour (nth$ ?hour_i $?hours))
